@@ -24,11 +24,11 @@ const Index = () => {
         return <ExportPanel />;
       case 'settings':
         return (
-          <div className="flex-1 p-8 bg-gray-50">
+          <div className="flex-1 p-8 bg-gray-50 dark:bg-gray-900">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-3xl font-bold text-gray-900 mb-6">Settings</h1>
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <p className="text-gray-600">Settings panel coming soon...</p>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Settings</h1>
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                <p className="text-gray-600 dark:text-gray-300">Settings panel coming soon...</p>
               </div>
             </div>
           </div>
@@ -39,7 +39,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-gray-50">
+    <div className="min-h-screen flex w-full bg-gray-50 dark:bg-gray-900">
       <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
       {renderContent()}
     </div>

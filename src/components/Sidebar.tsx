@@ -11,6 +11,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface SidebarProps {
   activeTab: string;
@@ -28,13 +29,16 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
   ];
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col">
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-            <Brush className="w-4 h-4 text-white" />
+    <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <Brush className="w-4 h-4 text-white" />
+            </div>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">DesignStudio</h1>
           </div>
-          <h1 className="text-xl font-bold text-gray-900">DesignStudio</h1>
+          <ThemeToggle />
         </div>
       </div>
 
@@ -47,8 +51,8 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
               className={cn(
                 "w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200",
                 activeTab === item.id
-                  ? "bg-blue-50 text-blue-600 border border-blue-200"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
               )}
             >
               <item.icon className="w-5 h-5" />
@@ -58,7 +62,7 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
         </div>
       </nav>
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-lg flex items-center justify-center space-x-2 hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
           <Plus className="w-4 h-4" />
           <span className="font-medium">New Design</span>
