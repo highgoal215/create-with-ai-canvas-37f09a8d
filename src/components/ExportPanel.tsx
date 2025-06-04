@@ -1,244 +1,201 @@
 
 import React, { useState } from 'react';
-import { Download, FileImage, FileText, Code, Share2, Link, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { toast } from 'sonner';
+import { 
+  Download, 
+  FileImage, 
+  FileText, 
+  Video, 
+  Settings,
+  Check,
+  Copy
+} from 'lucide-react';
 
 export const ExportPanel = () => {
-  const [quality, setQuality] = useState([80]);
-  const [embedCode, setEmbedCode] = useState('');
+  const [selectedFormat, setSelectedFormat] = useState('png');
+  const [isExporting, setIsExporting] = useState(false);
 
   const exportFormats = [
-    { id: 'png', name: 'PNG', description: 'Best for web graphics with transparency', icon: FileImage },
-    { id: 'jpg', name: 'JPEG', description: 'Best for photos and web use', icon: FileImage },
-    { id: 'pdf', name: 'PDF', description: 'Best for print and documents', icon: FileText },
-    { id: 'svg', name: 'SVG', description: 'Best for scalable vector graphics', icon: Code },
+    { id: 'png', icon: FileImage, label: 'PNG', description: 'High quality with transparency', size: '2.4 MB' },
+    { id: 'jpg', icon: FileImage, label: 'JPG', description: 'Compressed for web use', size: '1.2 MB' },
+    { id: 'svg', icon: FileText, label: 'SVG', description: 'Vector format, scalable', size: '156 KB' },
+    { id: 'pdf', icon: FileText, label: 'PDF', description: 'Print-ready document', size: '892 KB' },
+    { id: 'mp4', icon: Video, label: 'MP4', description: 'Animated video export', size: '5.6 MB' },
   ];
 
-  const dimensions = [
-    { name: 'Original Size', width: 800, height: 600 },
-    { name: 'HD (1920x1080)', width: 1920, height: 1080 },
-    { name: 'Square (1080x1080)', width: 1080, height: 1080 },
-    { name: 'Instagram Story (1080x1920)', width: 1080, height: 1920 },
-    { name: 'Facebook Cover (820x312)', width: 820, height: 312 },
-    { name: 'Custom', width: 0, height: 0 },
+  const exportSizes = [
+    { id: 'small', label: 'Small', dimensions: '800x600', recommended: false },
+    { id: 'medium', label: 'Medium', dimensions: '1200x900', recommended: true },
+    { id: 'large', label: 'Large', dimensions: '1920x1080', recommended: false },
+    { id: 'custom', label: 'Custom', dimensions: 'Custom size', recommended: false },
   ];
 
-  const handleExport = (format: string) => {
-    toast.success(`Exporting as ${format.toUpperCase()}...`);
+  const recentExports = [
+    { id: 1, name: 'Social Media Post.png', format: 'PNG', size: '2.4 MB', date: '2 hours ago' },
+    { id: 2, name: 'Business Card.pdf', format: 'PDF', size: '892 KB', date: '1 day ago' },
+    { id: 3, name: 'Logo Design.svg', format: 'SVG', size: '156 KB', date: '2 days ago' },
+  ];
+
+  const handleExport = () => {
+    setIsExporting(true);
     // Simulate export process
     setTimeout(() => {
-      toast.success(`Design exported as ${format.toUpperCase()}!`);
+      setIsExporting(false);
     }, 2000);
   };
 
-  const generateEmbedCode = () => {
-    const code = `<iframe src="https://designstudio.app/embed/design-123" width="800" height="600" frameborder="0"></iframe>`;
-    setEmbedCode(code);
-    toast.success('Embed code generated!');
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    toast.success('Copied to clipboard!');
-  };
-
   return (
-    <div className="flex-1 p-6 bg-gray-50">
+    <div className="flex-1 p-8 bg-gray-50 dark:bg-gray-900 h-screen">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
-            <Download className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Export & Share</h1>
-            <p className="text-gray-600">Download your design or share it with others</p>
-          </div>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Export Design</h1>
+          <p className="text-gray-600 dark:text-gray-300">Choose your export format and settings</p>
         </div>
 
-        <Tabs defaultValue="export" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="export">Export Files</TabsTrigger>
-            <TabsTrigger value="share">Share & Embed</TabsTrigger>
-            <TabsTrigger value="settings">Export Settings</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="export" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {exportFormats.map((format) => (
-                <Card key={format.id} className="cursor-pointer hover:shadow-md transition-shadow duration-200">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-3">
-                      <format.icon className="w-6 h-6 text-blue-600" />
-                      <span>{format.name}</span>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">{format.description}</p>
-                    <Button 
-                      onClick={() => handleExport(format.id)}
-                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Export as {format.name}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="share" className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Share2 className="w-5 h-5" />
-                    <span>Share Link</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="shareLink">Public Share Link</Label>
-                    <div className="flex space-x-2 mt-2">
-                      <Input
-                        id="shareLink"
-                        value="https://designstudio.app/share/design-123"
-                        readOnly
-                        className="flex-1"
-                      />
-                      <Button 
-                        variant="outline" 
-                        onClick={() => copyToClipboard('https://designstudio.app/share/design-123')}
-                      >
-                        <Link className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button variant="outline" className="flex-1">
-                      <Mail className="w-4 h-4 mr-2" />
-                      Email
-                    </Button>
-                    <Button variant="outline" className="flex-1">
-                      Social Media
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Code className="w-5 h-5" />
-                    <span>Embed Code</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button onClick={generateEmbedCode} className="w-full">
-                    Generate Embed Code
-                  </Button>
-                  {embedCode && (
-                    <div>
-                      <Label htmlFor="embedCode">Embed Code</Label>
-                      <div className="flex space-x-2 mt-2">
-                        <textarea
-                          id="embedCode"
-                          value={embedCode}
-                          readOnly
-                          className="flex-1 p-2 border border-gray-300 rounded-md resize-none"
-                          rows={4}
-                        />
-                        <Button 
-                          variant="outline" 
-                          onClick={() => copyToClipboard(embedCode)}
-                        >
-                          <Link className="w-4 h-4" />
-                        </Button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Export Options */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Format Selection */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Export Format</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {exportFormats.map((format) => (
+                  <div
+                    key={format.id}
+                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      selectedFormat === format.id
+                        ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+                        : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
+                    }`}
+                    onClick={() => setSelectedFormat(format.id)}
+                  >
+                    <div className="flex items-start space-x-3">
+                      <format.icon className="w-5 h-5 text-gray-600 dark:text-gray-400 mt-0.5" />
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-medium text-gray-900 dark:text-white">{format.label}</h3>
+                          <span className="text-sm text-gray-500 dark:text-gray-400">{format.size}</span>
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">{format.description}</p>
                       </div>
                     </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="settings" className="mt-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Export Dimensions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="dimensions">Preset Dimensions</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select dimensions" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {dimensions.map((dim) => (
-                          <SelectItem key={dim.name} value={dim.name}>
-                            {dim.name} {dim.width > 0 && `(${dim.width}x${dim.height})`}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="width">Width (px)</Label>
-                      <Input id="width" type="number" placeholder="800" />
-                    </div>
-                    <div>
-                      <Label htmlFor="height">Height (px)</Label>
-                      <Input id="height" type="number" placeholder="600" />
+                ))}
+              </div>
+            </div>
+
+            {/* Size Options */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Export Size</h2>
+              <div className="space-y-3">
+                {exportSizes.map((size) => (
+                  <div key={size.id} className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600"></div>
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <Label className="text-gray-900 dark:text-white font-medium">{size.label}</Label>
+                          {size.recommended && (
+                            <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded">
+                              Recommended
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{size.dimensions}</p>
+                      </div>
                     </div>
                   </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Quality Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <Label htmlFor="quality">Image Quality: {quality[0]}%</Label>
-                    <Slider
-                      id="quality"
-                      min={10}
-                      max={100}
-                      step={10}
-                      value={quality}
-                      onValueChange={setQuality}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="dpi">DPI (Print Quality)</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select DPI" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="72">72 DPI (Web)</SelectItem>
-                        <SelectItem value="150">150 DPI (Good Print)</SelectItem>
-                        <SelectItem value="300">300 DPI (High Print)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </CardContent>
-              </Card>
+                ))}
+              </div>
             </div>
-          </TabsContent>
-        </Tabs>
+
+            {/* Advanced Settings */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <div className="flex items-center space-x-2 mb-4">
+                <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Advanced Settings</h2>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label className="text-gray-700 dark:text-gray-300">High Quality</Label>
+                  <div className="w-10 h-6 bg-blue-500 rounded-full p-1">
+                    <div className="w-4 h-4 bg-white rounded-full ml-auto"></div>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <Label className="text-gray-700 dark:text-gray-300">Include Metadata</Label>
+                  <div className="w-10 h-6 bg-gray-300 dark:bg-gray-600 rounded-full p-1">
+                    <div className="w-4 h-4 bg-white rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Preview and Export */}
+          <div className="space-y-6">
+            {/* Preview */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Preview</h2>
+              <div className="aspect-video bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center">
+                <div className="text-white font-medium">Design Preview</div>
+              </div>
+              <div className="mt-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Format:</span>
+                  <span className="text-gray-900 dark:text-white font-medium">{selectedFormat.toUpperCase()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">Size:</span>
+                  <span className="text-gray-900 dark:text-white font-medium">1200x900</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600 dark:text-gray-400">File Size:</span>
+                  <span className="text-gray-900 dark:text-white font-medium">2.4 MB</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Export Button */}
+            <Button 
+              onClick={handleExport}
+              disabled={isExporting}
+              className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white py-3"
+            >
+              {isExporting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4 mr-2" />
+                  Export Design
+                </>
+              )}
+            </Button>
+
+            {/* Recent Exports */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Recent Exports</h2>
+              <div className="space-y-3">
+                {recentExports.map((export_item) => (
+                  <div key={export_item.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium text-gray-900 dark:text-white text-sm truncate">{export_item.name}</h3>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{export_item.size} • {export_item.date}</p>
+                    </div>
+                    <Button variant="ghost" size="sm">
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
