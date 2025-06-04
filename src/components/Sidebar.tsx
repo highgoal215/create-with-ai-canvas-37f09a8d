@@ -1,0 +1,69 @@
+
+import React from 'react';
+import { 
+  Home, 
+  Layers, 
+  Image, 
+  Brush, 
+  Download, 
+  Settings,
+  Plus,
+  Sparkles
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface SidebarProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
+export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
+  const menuItems = [
+    { id: 'dashboard', icon: Home, label: 'Dashboard' },
+    { id: 'editor', icon: Layers, label: 'Editor' },
+    { id: 'assets', icon: Image, label: 'Assets' },
+    { id: 'ai', icon: Sparkles, label: 'AI Panel' },
+    { id: 'export', icon: Download, label: 'Export' },
+    { id: 'settings', icon: Settings, label: 'Settings' },
+  ];
+
+  return (
+    <div className="w-64 bg-white border-r border-gray-200 h-screen flex flex-col">
+      <div className="p-6 border-b border-gray-200">
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <Brush className="w-4 h-4 text-white" />
+          </div>
+          <h1 className="text-xl font-bold text-gray-900">DesignStudio</h1>
+        </div>
+      </div>
+
+      <nav className="flex-1 p-4">
+        <div className="space-y-2">
+          {menuItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onTabChange(item.id)}
+              className={cn(
+                "w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200",
+                activeTab === item.id
+                  ? "bg-blue-50 text-blue-600 border border-blue-200"
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+              )}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="font-medium">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      <div className="p-4 border-t border-gray-200">
+        <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-lg flex items-center justify-center space-x-2 hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
+          <Plus className="w-4 h-4" />
+          <span className="font-medium">New Design</span>
+        </button>
+      </div>
+    </div>
+  );
+};
