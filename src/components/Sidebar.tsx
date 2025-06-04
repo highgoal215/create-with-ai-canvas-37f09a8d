@@ -8,7 +8,8 @@ import {
   Download, 
   Settings,
   Plus,
-  Sparkles
+  Sparkles,
+  LogIn
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -27,6 +28,10 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
     { id: 'export', icon: Download, label: 'Export' },
     { id: 'settings', icon: Settings, label: 'Settings' },
   ];
+
+  const handleAuthClick = () => {
+    window.location.href = '/auth';
+  };
 
   return (
     <div className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 h-screen flex flex-col">
@@ -62,7 +67,15 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
         </div>
       </nav>
 
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+        <button 
+          onClick={handleAuthClick}
+          className="w-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-200"
+        >
+          <LogIn className="w-4 h-4" />
+          <span className="font-medium">Login / Sign Up</span>
+        </button>
+        
         <button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-lg flex items-center justify-center space-x-2 hover:from-blue-600 hover:to-purple-700 transition-all duration-200">
           <Plus className="w-4 h-4" />
           <span className="font-medium">New Design</span>
